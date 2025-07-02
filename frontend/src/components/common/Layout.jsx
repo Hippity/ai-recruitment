@@ -28,6 +28,7 @@ const navigationItems = [
   { text: 'Entities', icon: <BusinessIcon />, path: 'entities' },
   { text: 'Jobs', icon: <WorkIcon />, path: 'jobs' },
   { text: 'Criteria', icon: <AssignmentIcon />, path: 'criteria' },
+  { text: 'Application', icon: <AssignmentIcon />, path: 'application' },
 ];
 
 const Layout = ({ children, currentPage, onNavigate }) => {
@@ -96,7 +97,7 @@ const Layout = ({ children, currentPage, onNavigate }) => {
         component="main"
         sx={{
             p:3,
-            height: "100vh",
+            height: "100%",
             width: "85vw",
         }}
       >

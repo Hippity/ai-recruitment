@@ -5,6 +5,7 @@ import Layout from './components/common/Layout';
 import EntitiesPage from './pages/EntitiesPage';
 import JobsPage from './pages/JobsPage';
 import CriteriaPage from './pages/CriteriaPage';
+import ApplicationPage from './pages/ApplicationPage';
 
 // Create a custom theme
 const theme = createTheme({
@@ -86,6 +87,9 @@ function App() {
         );
       case 'criteria':
         return <CriteriaPage selectedJobId={selectedJobId} />;
+      
+      case 'application':
+        return <ApplicationPage />;
       default:
         return <EntitiesPage onNavigateToJobs={handleNavigateToJobs} />;
     }
