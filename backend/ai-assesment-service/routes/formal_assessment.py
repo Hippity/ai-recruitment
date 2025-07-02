@@ -12,14 +12,15 @@ def assess_formal():
         data = request.get_json()
         
         # Validate required fields
-        required_fields = ['job_id', 'candidate_data']
+        required_fields = ['job_id', 'candidate_id', 'candidate_data']
         if not data or not all(field in data for field in required_fields):
             return jsonify({
                 'success': False,
-                'error': 'Missing required fields: job_id, candidate_data'
+                'error': 'Missing required fields: job_id, candidate_id, candidate_data'
             }), 400
         
         job_id = data['job_id']
+        candidate_id = data['candidate_id']
         candidate_data = data['candidate_data']
         
         # Validate job_id
@@ -31,16 +32,16 @@ def assess_formal():
                 'error': 'job_id must be a valid integer'
             }), 400
         
-        # Validate candidate_data
-        if not isinstance(candidate_data, str) or not candidate_data.strip():
+        # Validate candidate_data is dict
+        if not isinstance(candidate_data, dict):
             return jsonify({
                 'success': False,
-                'error': 'candidate_data must be a non-empty string'
+                'error': 'candidate_data must be a dictionary'
             }), 400
         
         # Process assessment
         processor = AssessmentProcessor()
-        result = processor.process_formal_assessment(job_id, candidate_data)
+        result = processor.process_formal_assessment(job_id, candidate_id, candidate_data)
         
         if not result['success']:
             return jsonify(result), 500
@@ -185,76 +186,6 @@ def batch_assess_formal():
             'error': 'Internal server error'
         }), 500
 
-@formal_assessment_bp.route('/section-assess', methods=['POST'])
-def assess_section():
-    """
-    Assess specific section of a candidate (e.g., experience, skills)
-    """
-    try:
-        data = request.get_json()
-        
-        # Validate required fields
-        required_fields = ['job_id', 'section_type', 'candidate_data']
-        if not data or not all(field in data for field in required_fields):
-            return jsonify({
-                'success': False,
-                'error': 'Missing required fields: job_id, section_type, candidate_data'
-            }), 400
-        
-        job_id = data['job_id']
-        section_type = data['section_type']
-        candidate_data = data['candidate_data']
-        context = data.get('context', {})
-        
-        # Validate job_id
-        try:
-            job_id = int(job_id)
-        except (ValueError, TypeError):
-            return jsonify({
-                'success': False,
-                'error': 'job_id must be a valid integer'
-            }), 400
-        
-        # Validate section_type
-        valid_sections = ['experience', 'education', 'skills', 'motivation']
-        if section_type not in valid_sections:
-            return jsonify({
-                'success': False,
-                'error': f'Invalid section_type. Must be one of: {", ".join(valid_sections)}'
-            }), 400
-        
-        # Validate candidate_data
-        if not isinstance(candidate_data, str) or not candidate_data.strip():
-            return jsonify({
-                'success': False,
-                'error': 'candidate_data must be a non-empty string'
-            }), 400
-        
-        # Get job data
-        processor = AssessmentProcessor()
-        job_data = processor.fetch_job_data(job_id)
-        if not job_data:
-            return jsonify({
-                'success': False,
-                'error': 'Job not found'
-            }), 404
-        
-        # Process section assessment
-        result = processor.process_section_specific_assessment(
-            section_type, job_data, candidate_data, context
-        )
-        
-        if not result['success']:
-            return jsonify(result), 500
-        
-        return jsonify(result), 200
-        
-    except Exception as e:
-        return jsonify({
-            'success': False,
-            'error': 'Internal server error'
-        }), 500
-
 @formal_assessment_bp.route('/preview', methods=['POST'])
 def preview_formal_assessment():
     """
@@ -299,9 +230,8 @@ def preview_formal_assessment():
         
         formal_criteria = criteria_data.get('formal_assessment_criteria', [])
         
-        # Calculate total possible scores
-        total_max_score = sum(float(c.get('max_score', 0)) * float(c.get('weight', 1)) for c in formal_criteria)
-        total_weight = sum(float(c.get('weight', 1)) for c in formal_criteria)
+        # Calculate total possible scores (no weights)
+        total_max_score = sum(float(c.get('max_score', 0)) for c in formal_criteria)
         
         return jsonify({
             'success': True,
@@ -314,9 +244,8 @@ def preview_formal_assessment():
             'criteria_count': len(formal_criteria),
             'criteria': formal_criteria,
             'scoring_summary': {
-                'total_max_weighted_score': round(total_max_score, 2),
-                'total_weight': round(total_weight, 2),
-                'average_max_score': round(total_max_score / total_weight if total_weight > 0 else 0, 2)
+                'total_max_score': round(total_max_score, 2),
+                'average_max_score': round(total_max_score / len(formal_criteria) if formal_criteria else 0, 2)
             },
             'assessment_type': 'formal_assessment'
         }), 200
