@@ -19,7 +19,7 @@ def get_jobs():
     jobs = query.order_by(Job.created_at.desc()).all()
     return jsonify([job.to_dict() for job in jobs])
 
-@jobs_bp.route('/', methods=['POST'])
+@jobs_bp.route('', methods=['POST'])
 def create_job():
     data = request.get_json()
     

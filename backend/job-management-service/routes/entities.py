@@ -4,15 +4,15 @@ from utils.database import db
 
 entities_bp = Blueprint('entities', __name__)
 
-@entities_bp.route('/', methods=['GET'])
+@entities_bp.route('', methods=['GET'])
 def get_entities():
     entities = Entity.query.order_by(Entity.created_at.desc()).all()
     return jsonify([entity.to_dict() for entity in entities])
 
-@entities_bp.route('/', methods=['POST'])
+@entities_bp.route('', methods=['POST'])
 def create_entity():
     data = request.get_json()
-    
+
     if not data or 'name' not in data:
         return jsonify({'error': 'Name is required'}), 400
     

@@ -9,9 +9,9 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     
-    # Enable CORS for direct frontend access
-    CORS(app) 
-    
+    # Configure CORS to handle preflight requests
+    CORS(app)
+
     # Initialize database
     db.init_app(app)
     

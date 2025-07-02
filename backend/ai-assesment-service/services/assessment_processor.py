@@ -49,7 +49,7 @@ class AssessmentProcessor:
         """
         Process minimum qualification assessment area by area
         """
-        start_time = datetime.utcnow()
+        start_time = datetime.now()
         
         try:
             # Fetch job criteria
@@ -116,7 +116,7 @@ class AssessmentProcessor:
             
             db.session.commit()
             
-            processing_time = int((datetime.utcnow() - start_time).total_seconds() * 1000)
+            processing_time = int((datetime.now() - start_time).total_seconds() * 1000)
             
             return {
                 "success": True,
@@ -136,7 +136,7 @@ class AssessmentProcessor:
         """
         Process formal assessment area by area
         """
-        start_time = datetime.utcnow()
+        start_time = datetime.now()
         
         try:
             # Fetch job data and criteria
@@ -216,9 +216,7 @@ class AssessmentProcessor:
             
             # Calculate overall score
             overall_percentage = (total_score / total_max_score * 100) if total_max_score > 0 else 0
-            grade = self._calculate_grade(overall_percentage)
-            
-            processing_time = int((datetime.utcnow() - start_time).total_seconds() * 1000)
+            processing_time = int((datetime.now() - start_time).total_seconds() * 1000)
             
             return {
                 "success": True,
@@ -342,18 +340,3 @@ Return JSON:
   "justification": "Detailed explanation comparing experience to job requirements"
 }}
 """
-    
-    def _calculate_grade(self, percentage: float) -> str:
-        """
-        Calculate letter grade based on percentage
-        """
-        if percentage >= 90:
-            return "A"
-        elif percentage >= 80:
-            return "B"
-        elif percentage >= 70:
-            return "C"
-        elif percentage >= 60:
-            return "D"
-        else:
-            return "F"
