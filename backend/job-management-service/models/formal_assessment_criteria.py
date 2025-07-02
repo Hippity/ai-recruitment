@@ -10,9 +10,8 @@ class FormalAssessmentCriteria(db.Model):
     criteria = db.Column(db.Text, nullable=False)
     explanation = db.Column(db.Text)
     max_score = db.Column(db.Numeric(5, 2), default=10.00)
-    weight = db.Column(db.Numeric(3, 2), default=1.00)
     order_index = db.Column(db.Integer, default=0)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now())
     
     def to_dict(self):
         return {
@@ -22,7 +21,6 @@ class FormalAssessmentCriteria(db.Model):
             'criteria': self.criteria,
             'explanation': self.explanation,
             'max_score': float(self.max_score) if self.max_score else None,
-            'weight': float(self.weight) if self.weight else None,
             'order_index': self.order_index,
             'created_at': self.created_at.isoformat() if self.created_at else None
         }

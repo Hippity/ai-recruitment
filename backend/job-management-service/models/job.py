@@ -11,7 +11,7 @@ class Job(db.Model):
     description = db.Column(db.Text, nullable=False)
     cutoff_grade = db.Column(db.Numeric(5, 2))
     status = db.Column(db.Enum('draft', 'active', 'closed', name='job_status'), default='draft')
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now())
     
     # Relationships
     min_qualification_criteria = db.relationship('MinQualificationCriteria', backref='job', lazy=True)

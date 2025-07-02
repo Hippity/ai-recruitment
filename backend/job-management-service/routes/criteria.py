@@ -94,7 +94,6 @@ def create_formal_assessment_criteria():
         criteria=data['criteria'],
         explanation=data.get('explanation'),
         max_score=data.get('max_score', 10.00),
-        weight=data.get('weight', 1.00),
         order_index=data.get('order_index', max_order + 1)
     )
     
@@ -122,8 +121,6 @@ def update_formal_assessment_criteria(criteria_id):
         criteria.explanation = data['explanation']
     if 'max_score' in data:
         criteria.max_score = data['max_score']
-    if 'weight' in data:
-        criteria.weight = data['weight']
     if 'order_index' in data:
         criteria.order_index = data['order_index']
     
@@ -213,7 +210,6 @@ def create_bulk_formal_assessment_criteria():
                 criteria=criteria_data['criteria'],
                 explanation=criteria_data.get('explanation'),
                 max_score=criteria_data.get('max_score', 10.00),
-                weight=criteria_data.get('weight', 1.00),
                 order_index=criteria_data.get('order_index', index + 1)
             )
             

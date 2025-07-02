@@ -10,7 +10,7 @@ class MinQualificationCriteria(db.Model):
     criteria = db.Column(db.Text, nullable=False)
     explanation = db.Column(db.Text)
     order_index = db.Column(db.Integer, default=0)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now())
     
     def to_dict(self):
         return {
